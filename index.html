@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consultation App</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body class="d-flex flex-column">
+  <div id="app">
+    <!-- Authentication View -->
+    <div id="auth-view" class="d-flex align-items-center justify-content-center flex-grow-1 py-5">
+      <div class="card w-100" style="max-width: 500px;">
+        <div class="card-body p-4">
+          <h2 id="auth-title" class="card-title text-center mb-4">Login</h2>
+
+          <!-- Login Form -->
+          <form id="login-form">
+            <div class="mb-3">
+              <label for="login-email" class="form-label">Email address</label>
+              <input type="email" class="form-control" id="login-email" required>
+            </div>
+            <div class="mb-3">
+              <label for="login-password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="login-password" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+            <div class="text-center mt-3">
+              <a href="#" id="switch-to-register" class="text-decoration-none">Don't have an account? Register</a>
+            </div>
+          </form>
+
+          <!-- Register Form -->
+          <form id="register-form" class="hidden">
+            <div class="mb-3">
+              <label for="register-name" class="form-label">Name</label>
+              <input type="text" class="form-control" id="register-name" required>
+            </div>
+            <div class="mb-3">
+              <label for="register-email" class="form-label">Email address</label>
+              <input type="email" class="form-control" id="register-email" required>
+            </div>
+            <div class="mb-3">
+              <label for="register-password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="register-password" required>
+            </div>
+            <div class="mb-3">
+              <!-- <label for="register-role" class="form-label">Role</label> -->
+              <input type="hidden" id="register-role" value="patient">
+
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Register</button>
+            <div class="text-center mt-3">
+              <a href="#" id="switch-to-login" class="text-decoration-none">Already have an account? Login</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main App View -->
+    <div id="main-view" class="hidden flex-grow-1 d-flex flex-column">
+      <!-- Header -->
+      <header class="bg-white shadow-sm py-3">
+        <div class="container">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+              <i class="bi bi-house-door-fill text-primary fs-4 me-2"></i>
+              <h1 class="h5 mb-0">Consultation</h1>
+            </div>
+            <div class="d-flex align-items-center">
+              <span id="current-user-name" class="me-2"></span>
+              <span id="current-user-role" class="badge bg-secondary role-badge"></span>
+              <button id="logout-btn" class="btn btn-sm btn-outline-secondary ms-3">Logout</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="flex-grow-1 py-4">
+        <div class="container">
+          <!-- Admin Dashboard -->
+          <div id="admin-dashboard" class="hidden">
+            <h2 class="h4 mb-4"><i class="bi bi-gear-fill me-2"></i>Admin Dashboard</h2>
+
+            <div class="card mb-4">
+              <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h3 class="h5 mb-0">Manage Doctors</h3>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="row" id="doctors-list">
+                  <!-- Doctors will be populated here -->
+                </div>
+                <div class="row">
+                  <form id="admin-add-doctor-form" class="mb-4">
+                    <h5>Add Doctor</h5>
+                    <div class="row g-2">
+                      <div class="col-md-3">
+                        <input type="text" class="form-control" id="admin-doctor-name" placeholder="Doctor Name"
+                          required>
+                      </div>
+                      <div class="col-md-3">
+                        <select id="doctor-specialty" class="form-select" required aria-placeholder="Specialty">
+                          <option value="General">General</option>
+                          <option value="Cardiologist">Cardiologist</option>
+                          <option value="Dermatologist">Dermatologist</option>
+                          <option value="Neurologist">Neurologist</option>
+                          <!-- Add more as needed -->
+                        </select>
+                      </div>
+
+                      <div class="col-md-3">
+                        <input type="email" class="form-control" id="admin-doctor-email" placeholder="Doctor Email"
+                          required>
+                      </div>
+                      <div class="col-md-3">
+                        <input type="password" class="form-control" id="admin-doctor-password" placeholder="Password"
+                          required>
+                      </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-2">Add Doctor</button>
+                  </form>
+
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="h5 mb-0">Manage Consultations</h3>
+              </div>
+              <div class="card-body">
+                <div id="admin-consultations-list">
+                  <!-- Consultations will be populated here -->
+                </div>
+              </div>
+            </div>
+
+            <div class="card mt-4">
+              <div class="card-header">
+                <h3 class="h5 mb-0">Book Consultation (Admin)</h3>
+              </div>
+              <div class="card-body">
+                <form id="admin-booking-form">
+                  <div class="mb-3">
+                    <label for="admin-patient-name" class="form-label">Patient Name</label>
+                    <input type="text" class="form-control" id="admin-patient-name" placeholder="Enter patient's name"
+                      required>
+
+                  </div>
+                  <div class="mb-3">
+                    <label for="admin-doctor" class="form-label">Select Doctor</label>
+                    <select class="form-select" id="admin-doctor" required>
+                      <option value="">Select a doctor</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="admin-day" class="form-label">Select Day</label>
+                    <select class="form-select" id="admin-day" required disabled>
+                      <option value="">Select a day</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="admin-time" class="form-label">Select Time</label>
+                    <select class="form-select" id="admin-time" required disabled>
+                      <option value="">Select a time</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-primary w-100">Book Consultation</button>
+                </form>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Doctor Dashboard -->
+          <div id="doctor-dashboard" class="hidden">
+            <h2 class="h4 mb-4"><i class="bi bi-person-fill me-2"></i>Doctor Dashboard</h2>
+
+            <div class="card mb-4">
+              <div class="card-header">
+                <h3 class="h5 mb-0">Your Availability</h3>
+              </div>
+              <div class="card-body">
+                <div id="availability-management">
+                  <div class="mb-3">
+                    <button id="add-availability-btn" class="btn btn-sm btn-primary">Add Availability</button>
+                  </div>
+                  <div id="doctor-availability-list">
+                    <!-- Availability will be populated here -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="h5 mb-0">Your Schedule</h3>
+              </div>
+              <div class="card-body">
+                <div id="doctor-consultations-list">
+                  <!-- Consultations will be populated here -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Patient Dashboard -->
+          <div id="patient-dashboard" class="hidden">
+            <h2 class="h4 mb-4"><i class="bi bi-person-fill me-2"></i>Patient Dashboard</h2>
+
+            <div class="card mb-4">
+              <div class="card-header">
+                <h3 class="h5 mb-0">Your Consultations</h3>
+              </div>
+              <div class="card-body">
+                <div id="patient-consultations-list">
+                  <!-- Consultations will be populated here -->
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="h5 mb-0">Book New Consultation</h3>
+              </div>
+              <div class="card-body">
+                <form id="booking-form">
+                  <div class="mb-3">
+                    <label for="booking-doctor" class="form-label">Select Doctor</label>
+                    <select class="form-select" id="booking-doctor" required>
+                      <option value="">Select a doctor</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="booking-day" class="form-label">Select Day</label>
+                    <select class="form-select" id="booking-day" required disabled>
+                      <option value="">Select a day</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="booking-time" class="form-label">Select Time</label>
+                    <select class="form-select" id="booking-time" required disabled>
+                      <option value="">Select a time</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-primary w-100">Book Consultation</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
